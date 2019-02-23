@@ -8,16 +8,13 @@ const petfinder = pf({
 });
 
 class Results extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pets: []
-    };
-  }
+  state = {
+    pets: [],
+    loading: true
+  };
   componentDidMount() {
     petfinder.pet
-      .find({ location: "Seattle, WA", output: "full" })
+      .find({ location: "Minneapolis, MN", output: "full" })
       .then(data => {
         let pets;
         if (data.petfinder.pets && data.petfinder.pets.pet) {
@@ -30,11 +27,15 @@ class Results extends React.Component {
           pets = [];
         }
         this.setState({
-          pets: pets
+          pets,
+          loading: false
         });
       });
   }
   render() {
+    if (this.state.loading) {
+      return <h1>Loading...</h1>;
+    }
     return (
       <div className="search">
         {this.state.pets.map(pet => {
