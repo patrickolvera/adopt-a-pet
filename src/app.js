@@ -2,15 +2,29 @@ import React from "react";
 import { render } from "react-dom";
 import { Router } from "@reach/router";
 import pf from "petfinder-client";
+import Loadable from "react-loadable";
+import { Global, css } from "@emotion/core";
 import { Provider } from "./SearchContext";
-import Results from "./Results";
-import Details from "./Details";
-import SearchParams from "./SearchParams";
 import NavBar from "./NavBar";
+import Results from "./Results";
+import SearchParams from "./SearchParams";
+
+const globalStyles = css`
+  * {
+    /* color: hotpink; */
+  }
+`;
 
 const petfinder = pf({
   key: process.env.API_KEY,
   secret: process.env.API_SECRET
+});
+
+const LoadableDetails = Loadable({
+  loader: () => import("./Details"),
+  loading() {
+    return <h1>loading split out code...</h1>;
+  }
 });
 
 class App extends React.Component {
@@ -69,11 +83,12 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Global styles={globalStyles} />
         <NavBar />
         <Provider value={this.state}>
           <Router>
             <Results path="/" />
-            <Details path="/details/:id" />
+            <LoadableDetails path="/details/:id" />
             <SearchParams path="/search-params" />
           </Router>
         </Provider>
