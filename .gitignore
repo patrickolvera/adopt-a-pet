@@ -14,6 +14,5 @@ yarn-error.log*
 .npm/
 dist/
 .cache/
-.env
 coverage/
 dev/
